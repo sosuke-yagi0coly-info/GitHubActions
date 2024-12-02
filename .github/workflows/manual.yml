@@ -1,0 +1,65 @@
+#name       ワークフローのなまえ
+#on         動作イベント
+#jobs       ジョブの単位
+#runs-on    ジョブを実行するマシン
+#steps      実行されるステップをグループ化
+#uses       ここで指定したアクションが実行される
+#run        プログラムを実行するようにジョブに指示する
+#name       runの手前に書くと名前を付けることができる
+
+name: auto_merge
+on: workflow_dispatch
+jobs:
+  auto_merge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write    #プッシュ権限を与える
+    steps:
+      - name: リポジトリのクローン
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 全ての履歴を取得
+
+      - name: 設定 - Gitユーザー名とメールアドレス
+        run: |
+          git config --local user.email "yagikundayo@gmail.com"
+          git config --local user.name "GitHubActions"
+
+      - name: リモートブランチをフェッチ
+        run: git fetch --all
+
+      #ここから、mainブランチの更新を行います
+      - name: mainブランチをチェックアウト
+        run: |
+          git checkout dev
+          git pull origin dev
+
+      - name: Designブランチをマージ
+        run: git merge origin/Design
+        
+      - name: Effectブランチをマージ
+        run: git merge origin/Effect
+        
+      #ここから、Designブランチの更新を行います
+      - name: Designブランチをチェックアウト
+        run: |
+          git checkout Design
+          git pull origin Design
+
+      - name: devブランチをマージ
+        run: git merge dev
+        
+      #ここから、Effectブランチの更新を行います
+      - name: Effectブランチをチェックアウト
+        run: |
+          git checkout Effect
+          git pull origin Effect
+
+      - name: devブランチをマージ
+        run: git merge dev
+
+      - name: 変更をプッシュ
+        run: |
+          git push origin dev
+          git push origin Design
+          git push origin Effect
