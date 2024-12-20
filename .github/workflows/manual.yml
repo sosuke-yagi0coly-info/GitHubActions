@@ -22,7 +22,7 @@ jobs:
 
       - name: 設定 - Gitユーザー名とメールアドレス
         run: |
-          git config --local user.email "yagikundayo@gmail.com"
+          git config --local user.email "sosuke-yagi@coly.info"
           git config --local user.name "GitHubActions"
 
       - name: リモートブランチをフェッチ
