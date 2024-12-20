@@ -54,7 +54,7 @@ jobs:
           #ビルドブランチにマージするブランチは以下のリストに記載
           mergeBranches=("dev" "dev" "qa")
 
-          #チェックボックスは以下のリストに記載
+          #チェックボックスは[workflow_dispatch:]内と以下のリストに記載
           isExecutions=(${{inputs.Develop}} ${{inputs.Develop2}} ${{inputs.QA}})
           
           length=${#branches[@]}
