@@ -40,7 +40,7 @@ jobs:
 
       - name: 設定 - Gitユーザー名とメールアドレス
         run: |
-          git config --local user.email "yagikundayo@gmail.com"
+          git config --local user.email "sosuke-yagi@coly.info"
           git config --local user.name "GitHubActions"
 
       - name: リモートブランチをフェッチ
@@ -48,9 +48,15 @@ jobs:
 
       - name: 複数ブランチに処理を実行
         run: |
+          #ビルドブランチは以下のリストに記載
           branches=("Build/Develop" "Build/Develop2" "Build/QA")
+          
+          #ビルドブランチにマージするブランチは以下のリストに記載
           mergeBranches=("dev" "dev" "qa")
+
+          #チェックボックスは以下のリストに記載
           isExecutions=(${{inputs.Develop}} ${{inputs.Develop2}} ${{inputs.QA}})
+          
           length=${#branches[@]}
           for ((i=0; i<$length; i++)); do
             branch=${branches[$i]}
@@ -82,10 +88,7 @@ jobs:
   
             #sedでバージョンを書き換え
             sed -i "s/bundleVersion: .*/bundleVersion: $newVersion/" "$filePath"
-  
-            #バージョン番号を他のステップで再利用できるようにする
-            echo "newVersion=$newVersion" >> $GITHUB_ENV
-            
+              
             #変更をコミット
             git add "$filePath"
             git commit -m "ver $newVersion"
